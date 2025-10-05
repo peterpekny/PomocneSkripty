@@ -1,0 +1,2 @@
+# PomocneSkripty
+Moje Pomocne skripty
