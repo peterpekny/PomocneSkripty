@@ -1,0 +1,19 @@
+---
+- name: Ciste vypnutie vsetkych Kubernetes uzlov
+  hosts: kube_node
+  become: yes
+  tasks:
+    - name: Kontrola, ci je uzol uz vypnuty
+      ansible.builtin.shell: systemctl is-system-running | grep -q running
+      register: system_running_check
+      ignore_errors: yesz
+      changed_when: false
+
+    - name: Vypnutie uzla
+      ansible.builtin.command: shutdown now
+      when: system_running_check.rc == 0
+      ignore_errors: yes
+
+    - name: Sprava o vypnuti
+      ansible.builtin.debug:
+        msg: "Uzol {{ inventory_hostname }} bol vypnuty. Ak uz bol vypnuty/nedostupny, tento krok je OK."
